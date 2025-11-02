@@ -1,8 +1,8 @@
 ﻿namespace TP09_EDD2;
 
-public partial class MainPage : ContentPage
+public class MainPage : ContentPage
 {
-    int count = 0;
+    private int count;
 
     public MainPage()
     {

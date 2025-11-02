@@ -1,8 +1,4 @@
-﻿using Android.App;
-using Android.Content.PM;
-using Android.OS;
-
-namespace TP09_EDD2;
+﻿namespace TP09_EDD2;
 
 [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop,
     ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode |

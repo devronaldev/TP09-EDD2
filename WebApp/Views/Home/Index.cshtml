@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Gerenciamento de Atendimento Simples";
+    
+    var waitingTickets = ViewData["WaitingTickets"] as IEnumerable<WebApp.Models.Ticket> ?? Enumerable.Empty<WebApp.Models.Ticket>();
+    var attendedTickets = ViewData["AttendedTickets"] as IEnumerable<WebApp.Models.Ticket> ?? Enumerable.Empty<WebApp.Models.Ticket>();
+    var windowCount = (int?)(ViewData["WindowCount"] ?? 0);
+    var selectedWindowId = (int?)(ViewData["SelectedWindowId"] ?? 1);
+}
+
+<style>
+    .list-box {
+        height: 300px; /* Aumentado a altura da caixa para acompanhar a fonte */
+        overflow-y: auto;
+        border: 1px solid #ced4da;
+        padding: 0.75rem; /* Aumentado o padding interno */
+        margin-bottom: 0.5rem;
+        font-family: monospace;
+        font-size: 1.15rem; /* Aumentado o tamanho da fonte da lista */
+        background-color: #f8f9fa; 
+    }
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .list-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    /* Estilo para garantir que o input de guichê também aumente um pouco */
+    .btn-lg-custom {
+        padding: 0.5rem 1rem;
+        font-size: 1.2rem;
+    }
+</style>
+
+@* Contêiner principal com a classe fs-4 para aumentar a fonte de todo o conteúdo *@
+<div class="container-fluid p-3 fs-4"> 
+    
+    <div class="row mt-4">
+
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">Fila Aguardando</div>
+                <div class="card-body">
+
+                    <form method="post" asp-controller="Queue" asp-action="Generate" class="d-grid mb-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Nova Senha</button>
+                    </form>
+
+                    <div class="list-container">
+                        <div id="listaSenhas" class="list-box flex-grow-1">
+                            @if (waitingTickets.Any())
+                            {
+                                @foreach (var ticket in waitingTickets)
+                                {
+                                    <div>@ticket.PartialData()</div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="text-muted fs-5">Nenhuma senha na fila.</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header bg-secondary text-white">Controle de Atendimento</div>
+                <div class="card-body">
+
+                    <form method="post" asp-controller="Queue" asp-action="Call">
+                        <div class="d-flex align-items-center mb-4">
+                            <label for="selectedWindowId" class="form-label me-2 mb-0 fw-bold">Guichê:</label>
+                            <input type="number" id="selectedWindowId" name="selectedWindowId" class="form-control me-3 fs-5" style="width: 100px; height: 50px;" value="@selectedWindowId">
+                            <button type="submit" class="btn btn-success btn-lg-custom">Chamar</button>
+                        </div>
+                    </form>
+
+                    <form method="post" asp-controller="Queue" asp-action="AddWindow">
+                        <h5 class="mt-4 mb-2">Configuração</h5>
+                        <p class="mb-1 text-muted fs-5">Quantidade de guichês ativos:</p>
+                        <div class="d-flex align-items-center">
+                            <input type="text" class="form-control me-3 fs-5" value="@windowCount" readonly style="width: 100px;">
+                            <button type="submit" class="btn btn-info btn-lg-custom text-white">Adicionar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card h-100">
+                <div class="card-header bg-dark text-white">Atendimentos</div>
+                <div class="card-body">
+
+                    <div class="list-container">
+                        <div id="listaAtendimentos" class="list-box flex-grow-1">
+                            @if (attendedTickets.Any())
+                            {
+                                @foreach (var ticket in attendedTickets)
+                                {
+                                    <div>@ticket.FullData()</div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="text-muted fs-5">Nenhum atendimento registrado.</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

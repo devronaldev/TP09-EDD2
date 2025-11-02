@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace TP09_EDD2;
+﻿namespace TP09_EDD2;
 
 public static class MauiProgram
 {
